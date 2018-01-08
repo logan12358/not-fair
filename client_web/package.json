@@ -1,0 +1,17 @@
+{
+  "name": "but-not-as-we-know-it-client-web",
+  "version": "1.0.0",
+  "description": "web client for the programming game \"But Not as we Know it\"",
+  "main": "server.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logan12358/but-not-as-we-know-it/client_web"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  }
+}

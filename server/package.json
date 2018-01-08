@@ -1,0 +1,17 @@
+{
+  "name": "but-not-as-we-know-it-server",
+  "version": "1.0.0",
+  "description": "server for the programming game \"But Not as we Know it\"",
+  "main": "server.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logan12358/but-not-as-we-know-it/server"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "socket.io": "^2.0.4"
+  }
+}

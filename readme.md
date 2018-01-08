@@ -1,6 +1,6 @@
 # But Not as we Know it
 
-    Programming game for NZOI January Camp 2018, inspired by Life
+> Programming game for NZOI January Camp 2018, inspired by Life
 
 ## Concept
 
