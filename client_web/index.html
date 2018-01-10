@@ -1,9 +1,94 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <style>
+      table, tr, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      td {
+        width: 1.5em;
+        height: 1.5em;
+        background-color: grey;
+      }
+      td:hover {
+        opacity: 0.5;
+      }
+    </style>
+  </head>
   <body>
+    <div id='join'>
+      name:<input type='text' class='name' disabled />
+      colour:<input type='text' class='colour' disabled />
+      <button disabled>join</button>
+    </div>
+    <div id='game' style='display: none'>
+      turn:<span class='turn'></span>
+      num players:<span class='num_players'></span>
+      <div class='board'></div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io(':3000')
+      var qs = (selector) => document.querySelector(selector)
+      var el = (...args) => document.createElement(...args)
+
+      var handleConnect = (socket) => {
+        qs('#join > .name').disabled = qs('#join > button').disabled = false
+        qs('#join > button').addEventListener('click', () => {
+          socket.emit('hello', { name: qs('#join > .name').value, colour: 'black' })
+          qs('#join').style.display = 'none'
+          socket.on('start', handleStart)
+          console.log('sent hello')
+        })
+      }
+  
+      var handleStart = ({ size, players, turn }) => {
+        console.log('received start')
+        qs('#game').style.display = 'block';
+        qs('#game > .turn').innerText = turn
+        qs('#game > .num_players').innerText = players
+        let [width, height] = size
+        let table = document.createElement('table')
+        let board =
+          new Array(height)
+          .fill(null)
+          .map((_, row) => {
+            let table_row = el('tr')
+            table.appendChild(table_row)
+            
+            return new Array(width)
+                   .fill(null)
+                   .map((_, column) => {
+                     let cell = el('td')
+                     cell.addEventListener('click', () => {
+                       socket.emit('move', { position: [column, row] })
+                     })
+                     table_row.appendChild(cell)
+                     return cell
+                   })
+          })
+
+        qs('#game > .board').appendChild(table)
+        socket.on('move', ({ position, colour }) => {
+          let [column, row] = position;
+          board[row][column].style['background-color'] = colour
+        })
+      }
+
+      socket.on('connect', () => {
+        qs('#join > .name').disabled = false
+        qs('#join > .colour').disabled = false
+        qs('#join > button').disabled = false
+        console.log('connected')
+        qs('#join > button').addEventListener('click', () => {
+          socket.emit('hello', { name: qs('#join > .name').value, colour: qs('#join > .colour').value })
+          qs('#join').style.display = 'none'
+          console.log('sent hello')
+
+          socket.on('start', handleStart)
+        })
+      })
     </script>
   </body>
 </html>
