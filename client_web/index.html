@@ -26,6 +26,7 @@
       turn:<span class='turn'></span>
       num players:<span class='num_players'></span>
       <div class='board'></div>
+      probability:<span class='probability'></span>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -64,6 +65,27 @@
                      cell.addEventListener('click', () => {
                        socket.emit('move', { position: [column, row] })
                      })
+                     cell.addEventListener('mouseover', () => {
+                       let deltas = [-1, 0, 1]
+                       let counts = new Map()
+                       let total = 0
+                       for (let delta_row of deltas) {
+                         for (let delta_column of deltas) {
+                           if (delta_row + row >= 0 && delta_row + row < height &&
+                               delta_column + column >= 0 && delta_column + column < width) {
+                             if (board[delta_row + row][delta_column + column].style['background-color'] !== '') total++
+                             let x = counts.get(board[delta_row + row][delta_column + column].style['background-color'])
+                             if (x === undefined) x = 0
+                             x++
+                             counts.set(board[delta_row + row][delta_column + column].style['background-color'], x)
+                           }
+                         }
+                       }
+                       console.log(total)
+
+                       let probability = 100 * ((counts.get(qs('#join > .colour').value) || 0) + 1) / (total + 1)
+                       qs('#game > .probability').innerText = probability + '%'
+                     })
                      table_row.appendChild(cell)
                      return cell
                    })
@@ -73,6 +95,9 @@
         socket.on('move', ({ position, colour }) => {
           let [column, row] = position;
           board[row][column].style['background-color'] = colour
+          turn--
+          if (turn < 0) turn = players - 1
+          qs('#game > .turn').innerText = turn
         })
       }
 
