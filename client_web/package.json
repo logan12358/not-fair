@@ -1,12 +1,12 @@
 {
-  "name": "but-not-as-we-know-it-client-web",
+  "name": "not-fair-client-web",
   "version": "1.0.0",
-  "description": "web client for the programming game \"But Not as we Know it\"",
+  "description": "web client for the programming game \"Not Fair\"",
   "main": "server.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/logan12358/but-not-as-we-know-it/client_web"
+    "url": "https://github.com/logan12358/not-fair/client_web"
   },
   "author": "",
   "license": "",

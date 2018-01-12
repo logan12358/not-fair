@@ -1,4 +1,4 @@
-# But Not as we Know it
+# Not Fair
 
 > Programming game for NZOI January Camp 2018, inspired by Life
 

@@ -1,12 +1,12 @@
 {
-  "name": "but-not-as-we-know-it-server",
+  "name": "not-fair-server",
   "version": "1.0.0",
-  "description": "server for the programming game \"But Not as we Know it\"",
+  "description": "server for the programming game \"not-fair\"",
   "main": "server.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/logan12358/but-not-as-we-know-it/server"
+    "url": "https://github.com/logan12358/not-fair/server"
   },
   "author": "",
   "license": "",
