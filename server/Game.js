@@ -19,6 +19,7 @@ function Game(players, size) {
   assert(players.every(player => player.game === null), 'players not all idle')
   for (let player of game.players) {
     player.game = game
+    player.index = game.players.indexOf(player)
     player.socket.emit('start', {
       size: game.size,
       players: game.players.length,
@@ -80,7 +81,7 @@ Game.prototype.move = function(position) {
   for (let player of this.players) {
     player.socket.emit('move', {
       position: position,
-      colour: new_owner.colour
+      colour: new_owner.index
     })
   }
   this.turn = (this.turn + 1) % this.players.length

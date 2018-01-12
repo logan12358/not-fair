@@ -33,6 +33,7 @@
       var socket = io(':3000')
       var qs = (selector) => document.querySelector(selector)
       var el = (...args) => document.createElement(...args)
+      let colours = ['red', 'blue']
 
       var handleConnect = (socket) => {
         qs('#join > .name').disabled = qs('#join > button').disabled = false
@@ -94,7 +95,7 @@
         qs('#game > .board').appendChild(table)
         socket.on('move', ({ position, colour }) => {
           let [column, row] = position;
-          board[row][column].style['background-color'] = colour
+          board[row][column].style['background-color'] = colours[colour]
           turn--
           if (turn < 0) turn = players - 1
           qs('#game > .turn').innerText = turn
