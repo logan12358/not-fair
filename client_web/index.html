@@ -17,7 +17,11 @@
     </style>
   </head>
   <body>
-    <div id='join'>
+    <div id='connect'>
+      server:<input type='text' class='server' />
+      <button>connect</button>
+    </div>
+    <div id='join' style='display: none'>
       name:<input type='text' class='name' disabled />
       colour:<input type='text' class='colour' disabled />
       <button disabled>join</button>
@@ -30,9 +34,30 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io(':3000')
-      var qs = (selector) => document.querySelector(selector)
-      var el = (...args) => document.createElement(...args)
+      var qs = (selector) => document.querySelector(selector),
+          el = (...args) => document.createElement(...args),
+          socket
+      
+      qs('#connect > button').addEventListener('click', () => {
+        let server = qs('#connect > .server').value
+        qs('#connect').style.display = 'none'
+        qs('#join').style.display = 'block'
+        socket = io(server)
+        socket.on('connect', () => {
+          qs('#join > .name').disabled = false
+          qs('#join > .colour').disabled = false
+          qs('#join > button').disabled = false
+          console.log('connected')
+          qs('#join > button').addEventListener('click', () => {
+            socket.emit('hello', { name: qs('#join > .name').value, colour: qs('#join > .colour').value })
+            qs('#join').style.display = 'none'
+            console.log('sent hello')
+
+            socket.on('start', handleStart)
+          })
+        })
+      })
+
       let colours = ['red', 'blue']
 
       var handleConnect = (socket) => {
@@ -46,6 +71,7 @@
       }
   
       var handleStart = ({ size, players, turn }) => {
+        let our_colour = turn
         console.log('received start')
         qs('#game').style.display = 'block';
         qs('#game > .turn').innerText = turn
@@ -84,7 +110,7 @@
                        }
                        console.log(total)
 
-                       let probability = 100 * ((counts.get(qs('#join > .colour').value) || 0) + 1) / (total + 1)
+                       let probability = 100 * ((counts.get(colours[our_colour]) || 0) + 1) / (total + 1)
                        qs('#game > .probability').innerText = probability + '%'
                      })
                      table_row.appendChild(cell)
@@ -102,19 +128,6 @@
         })
       }
 
-      socket.on('connect', () => {
-        qs('#join > .name').disabled = false
-        qs('#join > .colour').disabled = false
-        qs('#join > button').disabled = false
-        console.log('connected')
-        qs('#join > button').addEventListener('click', () => {
-          socket.emit('hello', { name: qs('#join > .name').value, colour: qs('#join > .colour').value })
-          qs('#join').style.display = 'none'
-          console.log('sent hello')
-
-          socket.on('start', handleStart)
-        })
-      })
     </script>
   </body>
 </html>
